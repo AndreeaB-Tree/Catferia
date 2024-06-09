@@ -3,7 +3,7 @@
     import BiEdit from "svelte-icons-pack/bi/BiEdit"
     import BiSolidTrash from "svelte-icons-pack/bi/BiSolidTrash"
 
-    import { connectedUser } from "$lib/stores/store"
+    import { updateUser, connectedUser } from "$lib/stores/store"
     import axiosRequest from "$lib/api/axios"
     import moment from "moment"
 
@@ -68,8 +68,7 @@
         const task = $connectedUser.tasks[index]
         await axiosRequest.delete("/task", { id: task._id })
 
-        $connectedUser.tasks.splice(1, index)
-        $connectedUser.tasks = $connectedUser.tasks
+        updateUser()
     }
 </script>
 
@@ -167,6 +166,11 @@
     
     .task-started {
         color: #ff6c94;
+    }
+
+
+    .task {
+        height: 100px;
     }
 
     

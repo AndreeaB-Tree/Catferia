@@ -1,6 +1,41 @@
 const UserModel = require("../models/UserModel")
 
 
+
+
+
+
+const getAvatar = async (request, response) => {
+
+    try {
+        const avatar = request.user.avatar
+
+        if (!avatar)
+            return response.status(404).send()
+
+        return response.set("Content-Type", "image/png").send(avatar)
+    }
+    catch(e) {
+        return response.status(400).send()
+    }
+}
+
+
+
+const addAvatar = async (req, res) => {
+    const buffer = req.file.buffer
+
+    req.user.avatar = buffer
+
+    try {
+        await req.user.save()
+        return res.send()
+    } catch(e) {
+        return res.status(400).send()
+    }
+};
+
+
 const loginUser = async (request, response) => {
     const email = request.body.email
     const password = request.body.password
@@ -13,7 +48,7 @@ const loginUser = async (request, response) => {
         return response.json(user)
     }
     catch(error) {
-        return response.status(400).json(error)
+        return response.status(400).json(error)     
     }
 }
 
@@ -38,7 +73,6 @@ const registerUser = async (request, response) => {
         return response.status(201).json(user)
     }
     catch(error) {
-        console.log(error)
         return response.status(400).json(error)
     }
 }
@@ -68,5 +102,7 @@ module.exports = {
     logoutUser,
     registerUser,
     getUser,
-    updateQuote
+    updateQuote,
+    getAvatar,
+    addAvatar
 }

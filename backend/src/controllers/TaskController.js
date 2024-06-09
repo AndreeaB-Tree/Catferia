@@ -33,7 +33,6 @@ const addTask = async (request, response) => {
         return response.status(201).json(task)
     }
     catch (error) {
-        console.log(error)
         return response.status(400).json(error)
     }
 }
@@ -50,7 +49,6 @@ const modifyTask = async (request, response) => {
         return response.status(201).send(task)
     }
     catch(e) {
-        console.log(e)
         return response.status(400).send(e)
     }
 }

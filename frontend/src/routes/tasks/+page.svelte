@@ -44,6 +44,40 @@
         editQuote = false
     }
 
+
+
+    let inputRef
+
+    const clickAvatar = () => {
+        inputRef.click()
+    }
+
+
+    const changeAvatar = async (event) => {
+        const file = event.target.files[0]
+
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file)
+
+            await axiosRequest.post('/avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+
+            updateAvatarUrl()
+        }
+    }
+
+
+    let avatarUrl = "http://localhost:8080/avatar"
+    function updateAvatarUrl() {
+        const timestamp = new Date().getTime()
+        avatarUrl = `http://localhost:8080/avatar?${timestamp}`
+    }
+
+   
 </script>
 
 
@@ -53,8 +87,14 @@
         <a href="/">
             <img src="/logo.png" alt="Logo" id="logo">
         </a>
-        <img src={"/avatar.jpg"} alt="Avatar" id="avatar">
+
+
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <img src={avatarUrl} alt="Avatar" id="avatar" class="user-avatar" on:click={clickAvatar}>
+        <input type="file" name="avatar" id="avatar" style="display: none;" accept="image/*" bind:this={inputRef} on:change={changeAvatar}>
         
+
         <h1 id="username">{$connectedUser.username}</h1>
 
         <button class="quote" on:click={() => editQuote = !editQuote}>{$connectedUser.quote || '"Add a quote"'}</button>
@@ -102,6 +142,10 @@
 
 
 <style>
+    .user-avatar {
+        cursor: pointer;
+    }
+
     .dialog-form {
         display: flex;
     }
